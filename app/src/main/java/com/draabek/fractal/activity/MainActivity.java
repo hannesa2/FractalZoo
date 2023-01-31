@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,14 +12,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 
-import com.draabek.fractal.fractal.FractalViewWrapper;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.draabek.fractal.R;
-import com.draabek.fractal.fractal.RenderListener;
-import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.canvas.FractalCpuView;
 import com.draabek.fractal.fractal.Fractal;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.draabek.fractal.fractal.FractalViewWrapper;
+import com.draabek.fractal.fractal.RenderListener;
 import com.draabek.fractal.gl.RenderImageView;
+import com.draabek.fractal.util.Utils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -62,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         }
         return fractalStrings;
     }
+
     /**
      * Called when the activity is first created.
      */
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             FractalRegistry.getInstance().init(readFractalMetadata());
         } catch (IOException e) {
-            Log.e(LOG_KEY,"Exception loading fractal metadata");
+            Log.e(LOG_KEY, "Exception loading fractal metadata");
             throw new RuntimeException(e);
         }
 
@@ -164,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
     public boolean attemptSave() {
         currentView.saveBitmap();
         return true;
@@ -171,6 +174,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Make visible correct view according to the Fractal.getViewWrapper method
+     *
      * @param newFractal Name of the current fractal
      */
     private void unveilCorrectView(String newFractal) {
@@ -207,10 +211,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.i(this.getClass().getName(), String.format("Rendering complete in %d ms", millis));
                 progressBar.post(() -> {
                     if (!currentView.isRendering())
-                    progressBar.setVisibility(View.GONE);
+                        progressBar.setVisibility(View.GONE);
                 });
             }
-    });
+        });
     }
 
     @Override

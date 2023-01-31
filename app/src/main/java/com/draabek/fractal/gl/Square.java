@@ -43,12 +43,12 @@ public class Square {
     // number of coordinates per vertex in this array
     private static final int COORDS_PER_VERTEX = 3;
     private static float squareCoords[] = {
-            -1.0f,  1.0f, 0.0f,   // top right
+            -1.0f, 1.0f, 0.0f,   // top right
             -1.0f, -1.0f, 0.0f,   // bottom right
             1.0f, -1.0f, 0.0f,   // bottom left
-            1.0f,  1.0f, 0.0f }; // top left
+            1.0f, 1.0f, 0.0f}; // top left
 
-    private final short drawOrder[] = { 0, 1, 2, 0, 2, 3 }; // order to draw vertices
+    private final short drawOrder[] = {0, 1, 2, 0, 2, 3}; // order to draw vertices
 
     private static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
@@ -59,7 +59,7 @@ public class Square {
 
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
-        // (# of coordinate values * 4 bytes per float)
+                // (# of coordinate values * 4 bytes per float)
                 squareCoords.length * 4);
         bb.order(ByteOrder.nativeOrder());
         vertexBuffer = bb.asFloatBuffer();
@@ -75,14 +75,14 @@ public class Square {
         drawListBuffer.put(drawOrder);
         drawListBuffer.position(0);
         updateCurrentFractal();
-     }
+    }
 
-    public void updateCurrentFractal () {
+    public void updateCurrentFractal() {
         Fractal f = FractalRegistry.getInstance().getCurrent();
         if (!(f instanceof GLSLFractal)) {
             throw new IllegalStateException("Current fractal not instance of " + GLSLFractal.class.getName());
         }
-        currentFractal = (GLSLFractal)f;
+        currentFractal = (GLSLFractal) f;
         updateShaders();
     }
 
@@ -109,17 +109,18 @@ public class Square {
             mProgram = 0;
             String msg = String.format("Failed to compile shader for %s\n%s",
                     FractalRegistry.getInstance().getCurrent().getName(), infoLog);
-            Log.e(LOG_KEY,  msg);
+            Log.e(LOG_KEY, msg);
             //this sequence is strange, hopefully there will not be infinite loop
             FractalRegistry.getInstance().setCurrent(
                     FractalRegistry.getInstance().get("Mandelbrot")
             );
         }
         if (FractalRegistry.getInstance().getCurrent().getParameters().get("glBuffer") != null) {
-            GLES20.glGenFramebuffers( 1, extraBufferId, 0 );
-            GLES20.glBindFramebuffer( GLES20.GL_FRAMEBUFFER, extraBufferId[0]);
+            GLES20.glGenFramebuffers(1, extraBufferId, 0);
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, extraBufferId[0]);
         }
     }
+
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
      */
@@ -153,7 +154,7 @@ public class Square {
             int handle = ShaderUtils.loadTexture(bitmap);
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, handle);
-            GLES20.glUniform1i(paletteHandle,0 );
+            GLES20.glUniform1i(paletteHandle, 0);
         }        // Draw the square
         GLES20.glDrawElements(
                 GLES20.GL_TRIANGLES, drawOrder.length,

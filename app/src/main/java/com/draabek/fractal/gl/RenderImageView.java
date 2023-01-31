@@ -12,12 +12,12 @@ import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
-import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
-import com.draabek.fractal.fractal.RenderListener;
 import com.draabek.fractal.activity.SaveBitmapActivity;
-import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.draabek.fractal.fractal.FractalViewWrapper;
+import com.draabek.fractal.fractal.RenderListener;
+import com.draabek.fractal.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,7 +32,7 @@ import java.util.Map;
 
 public class RenderImageView extends androidx.appcompat.widget.AppCompatImageView implements FractalViewWrapper {
 
-    private Map<Long, Boolean> terminateThreads = new Hashtable<>();
+    private final Map<Long, Boolean> terminateThreads = new Hashtable<>();
     private boolean renderingFlag;
     private boolean reinitFlag;
     private PixelBuffer pixelBuffer;
@@ -120,7 +120,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                         }
                     }
                 }
-            } while((exiting == null) || exiting);
+            } while ((exiting == null) || exiting);
         });
         glThread.start();
         terminateThreads.put(glThread.getId(), false);
@@ -128,16 +128,16 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
 
     //or just save current bitmap redundantly
     public Bitmap getBitmap() {
-            BitmapDrawable bitmapDrawable = ((BitmapDrawable) getDrawable());
-            Bitmap bitmap;
-            if (bitmapDrawable == null) {
-                buildDrawingCache();
-                bitmap = getDrawingCache();
-                destroyDrawingCache();
-            } else {
-                bitmap = bitmapDrawable.getBitmap();
-            }
-            return bitmap;
+        BitmapDrawable bitmapDrawable = ((BitmapDrawable) getDrawable());
+        Bitmap bitmap;
+        if (bitmapDrawable == null) {
+            buildDrawingCache();
+            bitmap = getDrawingCache();
+            destroyDrawingCache();
+        } else {
+            bitmap = bitmapDrawable.getBitmap();
+        }
+        return bitmap;
     }
 
     @Override
@@ -145,7 +145,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
         try {
             File tmpFile = File.createTempFile("bitmap", ".img", getContext().getCacheDir());
             Bitmap bitmap = this.getBitmap();
-            for (int i = 0;(i < 60) && (bitmap == null);i++) {
+            for (int i = 0; (i < 60) && (bitmap == null); i++) {
                 Log.d(this.getClass().getName(), "Wait for draw " + i);
                 try {
                     Thread.sleep(1000);
@@ -176,6 +176,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
             terminateThreads.put(key, true);
         }
     }
+
     public void requestRender() {
         if (isRendering()) cancelAllThreads();
         renderingFlag = true;
@@ -188,7 +189,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        float TOUCH_SCALE_FACTOR = 1.5f/Math.min(getWidth(), getHeight());
+        float TOUCH_SCALE_FACTOR = 1.5f / Math.min(getWidth(), getHeight());
 
         float x = e.getX();
         float y = e.getY();

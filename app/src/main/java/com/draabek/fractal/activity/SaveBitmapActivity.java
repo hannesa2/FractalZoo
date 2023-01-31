@@ -1,21 +1,25 @@
 package com.draabek.fractal.activity;
 
+import static android.os.Environment.DIRECTORY_PICTURES;
+import static android.os.Environment.getExternalStoragePublicDirectory;
+
 import android.Manifest;
 import android.app.WallpaperManager;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.draabek.fractal.R;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -26,13 +30,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 
-import static android.os.Environment.DIRECTORY_PICTURES;
-import static android.os.Environment.getExternalStoragePublicDirectory;
-
 /**
  * A login screen that offers login via email/password.
  */
-public class SaveBitmapActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback{
+public class SaveBitmapActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
     private static final String LOG_KEY = SaveBitmapActivity.class.getName();
     private static final int REQUEST_WRITE = 1;
@@ -62,8 +63,8 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
                         saveToFile();
                     }
                 } else if (radioGroup.getCheckedRadioButtonId() == R.id.bitmap_set_as_background_radio) {
-                   // handlePermissions(Manifest.permission.SET_WALLPAPER,
-                     //       getString(R.string.save_bitmap_set_wallpaper_rationale), REQUEST_WALLPAPER);
+                    // handlePermissions(Manifest.permission.SET_WALLPAPER,
+                    //       getString(R.string.save_bitmap_set_wallpaper_rationale), REQUEST_WALLPAPER);
                     setAsWallpaper();
                 } else {
                     Log.e(this.getClass().getName(), "Unknown radio button in SaveBitmapActivity");
@@ -74,7 +75,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
 
     private void saveToFile() {
         String filename = filenameEdit.getText().toString();
-        String path = filename.substring(0, filename.lastIndexOf("/")-1);
+        String path = filename.substring(0, filename.lastIndexOf("/") - 1);
         File dir = new File(path);
         if (!storageAvailable()) {
             Log.e(LOG_KEY, "External storage not available");
@@ -128,7 +129,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
     private boolean handlePermissions(final String permission, final String rationale, final int code) {
         if (ContextCompat.checkSelfPermission(SaveBitmapActivity.this, permission)
                 != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(SaveBitmapActivity.this,permission)) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(SaveBitmapActivity.this, permission)) {
                 //Just display a Toast
                 Toast.makeText(SaveBitmapActivity.this, rationale, Toast.LENGTH_SHORT).show();
                 final Handler handler = new Handler();
@@ -153,7 +154,7 @@ public class SaveBitmapActivity extends AppCompatActivity implements ActivityCom
             destChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
         } catch (IOException e) {
             e.printStackTrace();
-        } finally{
+        } finally {
             try {
                 if (sourceChannel != null) {
                     sourceChannel.close();

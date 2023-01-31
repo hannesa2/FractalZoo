@@ -34,8 +34,8 @@ public class KochSnowflake extends CanvasFractal {
         midPointPaint.setColor(Color.RED);
         midPointPaint.setStyle(Paint.Style.FILL);
 
-        int paddingX = canvas.getWidth()/10;
-        int paddingY = canvas.getHeight()/3;
+        int paddingX = canvas.getWidth() / 10;
+        int paddingY = canvas.getHeight() / 3;
 
         int secondX = canvas.getWidth() - paddingX;
         int firstY = canvas.getHeight() - paddingY;
@@ -44,12 +44,12 @@ public class KochSnowflake extends CanvasFractal {
         float dx = secondX - paddingX;
         float dy = secondY - firstY;
 
-        int length = (int) Math.sqrt(dx*dx+dy*dy);
+        int length = (int) Math.sqrt(dx * dx + dy * dy);
 
         float dirX = dx / length;
         float dirY = dy / length;
 
-        float height = (float)(Math.sqrt(2)/2 * length);
+        float height = (float) (Math.sqrt(2) / 2 * length);
 
         float cx = paddingX + dx * 0.5f;
         float cy = firstY + dy * 0.5f;
@@ -64,32 +64,32 @@ public class KochSnowflake extends CanvasFractal {
 
     }
 
-    private void drawNewPoint(float startX, float startY, float endX, float endY, int iterations){
+    private void drawNewPoint(float startX, float startY, float endX, float endY, int iterations) {
 
-        if(iterations <= 0) {
-            canvas.drawLine(startX,startY,endX,endY,paint);
+        if (iterations <= 0) {
+            canvas.drawLine(startX, startY, endX, endY, paint);
             return;
         }
 
-        if(iterations >= 1){
-            float distanceX = (endX - startX)/3;
-            float distanceY = (endY - startY)/3;
+        if (iterations >= 1) {
+            float distanceX = (endX - startX) / 3;
+            float distanceY = (endY - startY) / 3;
 
-            float aX = startX+distanceX;
-            float aY = startY+distanceY;
+            float aX = startX + distanceX;
+            float aY = startY + distanceY;
 
-            float bX = endX-distanceX;
-            float bY = endY-distanceY;
+            float bX = endX - distanceX;
+            float bY = endY - distanceY;
 
             double sin60 = -0.866025403784438646763723170752936183471402626905190;
 
-            float newPointX = aX + (float)(distanceX * 0.5 + distanceY * sin60);
-            float newPointY = aY + (float)(distanceY * 0.5 - distanceX * sin60);
+            float newPointX = aX + (float) (distanceX * 0.5 + distanceY * sin60);
+            float newPointY = aY + (float) (distanceY * 0.5 - distanceX * sin60);
 
-            drawNewPoint(startX,startY,aX,aY,iterations - 1);
-            drawNewPoint(aX,aY,newPointX,newPointY,iterations - 1);
-            drawNewPoint(newPointX,newPointY,bX,bY,iterations - 1);
-            drawNewPoint(bX,bY,endX,endY,iterations - 1);
+            drawNewPoint(startX, startY, aX, aY, iterations - 1);
+            drawNewPoint(aX, aY, newPointX, newPointY, iterations - 1);
+            drawNewPoint(newPointX, newPointY, bX, bY, iterations - 1);
+            drawNewPoint(bX, bY, endX, endY, iterations - 1);
 
         }
 

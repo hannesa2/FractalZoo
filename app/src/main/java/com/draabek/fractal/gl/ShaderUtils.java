@@ -24,7 +24,7 @@ public class ShaderUtils {
      * @param shaderCode - String containing the shader code.
      * @return - Returns an id for the shader.
      */
-    public static int loadShader(int type, String shaderCode){
+    public static int loadShader(int type, String shaderCode) {
 
         // create a vertex shader type (GLES20.GL_VERTEX_SHADER)
         // or a fragment shader type (GLES20.GL_FRAGMENT_SHADER)
@@ -47,7 +47,7 @@ public class ShaderUtils {
      * <pre>
      * mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
      * MyGLRenderer.checkGlError("glGetUniformLocation");</pre>
-     *
+     * <p>
      * If the operation is not successful, the check throws an error.
      *
      * @param glOperation - Name of the OpenGL call to check.
@@ -64,7 +64,8 @@ public class ShaderUtils {
 
     /**
      * Pass fractal settings as uniforms to the shader
-     * @param settings Map<String, Float> of fractal float settings
+     *
+     * @param settings      Map<String, Float> of fractal float settings
      * @param shaderProgram Handle to the compiled shader program to attach the uniforms to
      */
     public static void applyFloatUniforms(Map<String, Float> settings, int shaderProgram) {
@@ -86,8 +87,9 @@ public class ShaderUtils {
 
     /**
      * Pass current width and height as uniform to the shader
-     * @param width Current screen width
-     * @param height Current screen height
+     *
+     * @param width         Current screen width
+     * @param height        Current screen height
      * @param shaderProgram Handle to the compiled shader program to attach the uniforms to
      */
     public static void applyResolutionUniform(int width, int height, int shaderProgram) {
@@ -104,17 +106,16 @@ public class ShaderUtils {
 
     /**
      * Loads a texture bitmap into OpenGL. Used for palettes
+     *
      * @param bitmap The bitmap to load
      * @return The loaded texture ID
      */
-    public static int loadTexture(Bitmap bitmap)
-    {
+    public static int loadTexture(Bitmap bitmap) {
         final int[] textureHandle = new int[1];
 
         GLES20.glGenTextures(1, textureHandle, 0);
 
-        if (textureHandle[0] == 0)
-        {
+        if (textureHandle[0] == 0) {
             throw new RuntimeException("Error generating texture name.");
         }
 

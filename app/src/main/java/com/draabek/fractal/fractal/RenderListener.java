@@ -5,5 +5,6 @@ package com.draabek.fractal.fractal;
  */
 public interface RenderListener {
     void onRenderRequested();
+
     void onRenderComplete(long millis);
 }

@@ -15,6 +15,8 @@
  */
 package com.draabek.fractal.gl;
 
+import static android.graphics.Bitmap.createBitmap;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,12 +28,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.Toast;
 
-import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.R;
-import com.draabek.fractal.fractal.RenderListener;
 import com.draabek.fractal.activity.SaveBitmapActivity;
-import com.draabek.fractal.util.Utils;
 import com.draabek.fractal.fractal.FractalRegistry;
+import com.draabek.fractal.fractal.FractalViewWrapper;
+import com.draabek.fractal.fractal.RenderListener;
+import com.draabek.fractal.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -40,8 +42,6 @@ import java.nio.ByteBuffer;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
-
-import static android.graphics.Bitmap.createBitmap;
 
 /**
  * A view container where OpenGL ES graphics can be drawn on screen.
@@ -54,15 +54,15 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
 
     public MyGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init();
     }
 
     public MyGLSurfaceView(Context context) {
         super(context);
-        init(context);
+        init();
     }
 
-    public void init(Context context) {
+    public void init() {
 
         // Create an OpenGL ES 2.0 context.
         setEGLContextClientVersion(2);
@@ -97,7 +97,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
 
     @Override
     public boolean onTouchEvent(MotionEvent e) {
-        float TOUCH_SCALE_FACTOR = 1.5f/Math.min(getWidth(), getHeight());
+        float TOUCH_SCALE_FACTOR = 1.5f / Math.min(getWidth(), getHeight());
 
         float x = e.getX();
         float y = e.getY();
@@ -185,7 +185,6 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
 
     private class MyGLRenderer implements GLSurfaceView.Renderer {
 
-        private final String TAG = MyGLRenderer.class.getName();
         private Square mSquare;
 
         private int width;
@@ -198,7 +197,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
 
             // Set the background frame color
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-            mSquare   = new Square();
+            mSquare = new Square();
             capturing = false;
         }
 
@@ -207,7 +206,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
         }
 
         private Bitmap saveCurrentSurface(int width, int height) {
-            ByteBuffer bb = ByteBuffer.allocate(width * height*4);
+            ByteBuffer bb = ByteBuffer.allocate(width * height * 4);
 
             GLES20.glReadPixels(0, 0, width, height, GL10.GL_RGBA, GL10.GL_UNSIGNED_BYTE, bb);
 
@@ -244,7 +243,6 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
             this.width = width;
             this.height = height;
         }
-
 
 
     }

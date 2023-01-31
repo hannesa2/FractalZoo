@@ -6,9 +6,9 @@ import android.preference.PreferenceActivity;
 import com.draabek.fractal.R;
 
 public class FractalPreferenceActivity extends PreferenceActivity {
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    addPreferencesFromResource(R.xml.options);
-	}
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        addPreferencesFromResource(R.xml.options);
+    }
 }

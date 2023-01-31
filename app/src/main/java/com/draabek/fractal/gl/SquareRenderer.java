@@ -19,7 +19,9 @@ public class SquareRenderer implements Renderer {
     private int height;
     private boolean renderInProgress;
 
-    public SquareRenderer() {}
+    public SquareRenderer() {
+    }
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mSquare = new Square();

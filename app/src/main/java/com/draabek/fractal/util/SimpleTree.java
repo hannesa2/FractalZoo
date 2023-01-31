@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * Low performance and low capacity tree structure
+ *
  * @param <T> The datatype this tree holds
  */
 public class SimpleTree<T> {
@@ -60,7 +61,7 @@ public class SimpleTree<T> {
             addChild(value);
             return;
         }
-        for (int repeat = 0;repeat < 2;repeat++) {
+        for (int repeat = 0; repeat < 2; repeat++) {
             for (int i = 0; i < children.size(); i++) {
                 SimpleTree<T> child = children.get(i);
                 if ((path.peekLast() != null) && (path.peekLast().equals(child.data))) {

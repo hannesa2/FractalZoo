@@ -15,6 +15,7 @@ public abstract class BitmapDrawFractal extends CpuFractal {
     }
 
     public abstract Bitmap redrawBitmap(Bitmap bitmap, RectF rect);
+
     @Deprecated
     public abstract Bitmap redrawBitmapPart(Bitmap bitmap, RectF rect, Rect part);
 }

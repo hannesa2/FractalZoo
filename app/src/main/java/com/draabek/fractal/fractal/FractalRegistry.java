@@ -1,5 +1,7 @@
 package com.draabek.fractal.fractal;
 
+import static java.lang.Class.forName;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -23,32 +25,30 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.lang.Class.forName;
-
 public final class FractalRegistry {
-	private static final String LOG_KEY = FractalRegistry.class.getName();
-	private static FractalRegistry instance = null;
-	private Map<String, Fractal> fractals;
-	private SimpleTree<String> hierarchy;
-	private Fractal currentFractal = null;
+    private static final String LOG_KEY = FractalRegistry.class.getName();
+    private static FractalRegistry instance = null;
+    private final Map<String, Fractal> fractals;
+    private final SimpleTree<String> hierarchy;
+    private Fractal currentFractal = null;
 
-	private FractalRegistry() {
-	    fractals = new LinkedHashMap<>();
-	    hierarchy = new SimpleTree<>("All fractals");
-	}
+    private FractalRegistry() {
+        fractals = new LinkedHashMap<>();
+        hierarchy = new SimpleTree<>("All fractals");
+    }
 
-	private boolean initialized = false;
+    private boolean initialized = false;
 
-	public static FractalRegistry getInstance() {
-		if (instance == null) { //throw new IllegalStateException("Fractal registry not initialized");
+    public static FractalRegistry getInstance() {
+        if (instance == null) { //throw new IllegalStateException("Fractal registry not initialized");
             instance = new FractalRegistry();
-		}
-		return instance;
-	}
+        }
+        return instance;
+    }
 
-	public Map<String, Fractal> getFractals() {
-		return fractals;
-	}
+    public Map<String, Fractal> getFractals() {
+        return fractals;
+    }
 
     private Fractal fractalFromJsonObject(JsonObject jsonObject) {
         String name = jsonObject.get("name").getAsString();
@@ -108,44 +108,44 @@ public final class FractalRegistry {
         return null;
     }
 
-	private String[] loadShaders(Context ctx, String shaderPath) {
-		if (shaderPath == null) {
-			return null;
-		}
-		if (!(shaderPath.contains("/"))) shaderPath = "shaders/" + shaderPath;
-		try {
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					ctx.getAssets().open(shaderPath + "_fragment.glsl")
-			));
-			StringBuilder fragmentShader = new StringBuilder();
-			String line;
-			while ((line = br.readLine()) != null) {
-				fragmentShader.append(line).append("\n");
-			}
-			InputStream vertexIS;
-			try {
-				vertexIS = ctx.getAssets().open(shaderPath + "_vertex.glsl");
-			} catch(IOException e) {
-				Log.d(LOG_KEY, "Using default vertex shader for " + shaderPath);
-				vertexIS = ctx.getAssets().open("shaders/default_vertex.glsl");
-			}
-			if (vertexIS == null) {//fallback to simplest vertex shader
-				Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + shaderPath);
-				return null;
-			}
-			br = new BufferedReader(new InputStreamReader(vertexIS));
-			StringBuilder vertexShader = new StringBuilder();
-			while ((line = br.readLine()) != null) {
-				vertexShader.append(line).append("\n");
-			}
-			return new String[] {vertexShader.toString(), fragmentShader.toString()};
-		} catch(IOException e) {
-			Log.w(LOG_KEY, "IOException loading fractal shaders for" + shaderPath);
-			return null;
-		}
-	}
+    private String[] loadShaders(Context ctx, String shaderPath) {
+        if (shaderPath == null) {
+            return null;
+        }
+        if (!(shaderPath.contains("/"))) shaderPath = "shaders/" + shaderPath;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(
+                    ctx.getAssets().open(shaderPath + "_fragment.glsl")
+            ));
+            StringBuilder fragmentShader = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                fragmentShader.append(line).append("\n");
+            }
+            InputStream vertexIS;
+            try {
+                vertexIS = ctx.getAssets().open(shaderPath + "_vertex.glsl");
+            } catch (IOException e) {
+                Log.d(LOG_KEY, "Using default vertex shader for " + shaderPath);
+                vertexIS = ctx.getAssets().open("shaders/default_vertex.glsl");
+            }
+            if (vertexIS == null) {//fallback to simplest vertex shader
+                Log.e(LOG_KEY, "Not even default vertex shader found for fractal " + shaderPath);
+                return null;
+            }
+            br = new BufferedReader(new InputStreamReader(vertexIS));
+            StringBuilder vertexShader = new StringBuilder();
+            while ((line = br.readLine()) != null) {
+                vertexShader.append(line).append("\n");
+            }
+            return new String[]{vertexShader.toString(), fragmentShader.toString()};
+        } catch (IOException e) {
+            Log.w(LOG_KEY, "IOException loading fractal shaders for" + shaderPath);
+            return null;
+        }
+    }
 
-	private void processJsonElement(JsonElement jsonElement) {
+    private void processJsonElement(JsonElement jsonElement) {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         String pathInList = jsonObject.get("path").getAsString();
         jsonObject.remove("path");
@@ -160,16 +160,16 @@ public final class FractalRegistry {
         }
     }
 
-	public void init(String[] fractalList) {
-		if (initialized) return;
-		for (String fractal : fractalList) {
+    public void init(String[] fractalList) {
+        if (initialized) return;
+        for (String fractal : fractalList) {
             JsonElement jsonElement = new Gson().fromJson(fractal, JsonElement.class);
             processJsonElement(jsonElement);
         }
-		initialized = true;
-	}
+        initialized = true;
+    }
 
-	public Fractal get(String name) {
+    public Fractal get(String name) {
 		/*Fractal f = fractals.get(name);
 		if (f != null) return f;
 		if (Utils.DEBUG) {
@@ -178,18 +178,18 @@ public final class FractalRegistry {
             Log.w(LOG_KEY, "Fractal not found in registry: " + name);
             return get("Mandelbrot");
         }*/
-		return fractals.get(name);
-	}
+        return fractals.get(name);
+    }
 
-	public List<String> getOnLevel(Deque<String> level) {
+    public List<String> getOnLevel(Deque<String> level) {
         return hierarchy.getChildren(level);
     }
 
-	public Fractal getCurrent() {
-		return currentFractal;
-	}
+    public Fractal getCurrent() {
+        return currentFractal;
+    }
 
-	public void setCurrent(Fractal currentFractal) {
-		this.currentFractal = currentFractal;
-	}
+    public void setCurrent(Fractal currentFractal) {
+        this.currentFractal = currentFractal;
+    }
 }

@@ -8,55 +8,57 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public abstract class Fractal {
-	protected String name = "";
-	protected String thumbPath;
+    protected String name = "";
+    protected String thumbPath;
 
-	protected Map<String, Float> parameters;
+    protected Map<String, Float> parameters;
 
-	protected ColorPalette colorPalette;
+    protected ColorPalette colorPalette;
 
-	public Fractal() {
-		parameters = new LinkedHashMap<>();
-	}
+    public Fractal() {
+        parameters = new LinkedHashMap<>();
+    }
 
-	public Fractal(String name) {
-		this();
-		this.name = name;
-	}
+    public Fractal(String name) {
+        this();
+        this.name = name;
+    }
 
-	public abstract Class<? extends FractalViewWrapper> getViewWrapper();
+    public abstract Class<? extends FractalViewWrapper> getViewWrapper();
 
-	public void updateSettings(Map<String, Float> newSettings) {
-		this.parameters.putAll(newSettings);
-	}
+    public void updateSettings(Map<String, Float> newSettings) {
+        this.parameters.putAll(newSettings);
+    }
 
-	public @NonNull String getName() {
-		return name;
-	}
+    public @NonNull String getName() {
+        return name;
+    }
 
-	public void setName(@NonNull String name) {
-		this.name = name;
-	}
+    public void setName(@NonNull String name) {
+        this.name = name;
+    }
 
-	public String toString() {
-		return name;
-	}
+    public String toString() {
+        return name;
+    }
 
-	public Map<String, Float> getParameters() {
-		return parameters;
-	}
+    public Map<String, Float> getParameters() {
+        return parameters;
+    }
 
-	public String getThumbPath() { return thumbPath;}
+    public String getThumbPath() {
+        return thumbPath;
+    }
 
-	public void setThumbPath(String thumbPath) {
-		this.thumbPath = thumbPath;
-	}
+    public void setThumbPath(String thumbPath) {
+        this.thumbPath = thumbPath;
+    }
 
-	public ColorPalette getColorPalette() {
-		return colorPalette;
-	}
+    public ColorPalette getColorPalette() {
+        return colorPalette;
+    }
 
-	public void setColorPalette(ColorPalette colorPalette) {
-		this.colorPalette = colorPalette;
-	}
+    public void setColorPalette(ColorPalette colorPalette) {
+        this.colorPalette = colorPalette;
+    }
 }
