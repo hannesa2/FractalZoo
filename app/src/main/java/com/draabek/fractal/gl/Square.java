@@ -42,13 +42,13 @@ public class Square {
 
     // number of coordinates per vertex in this array
     private static final int COORDS_PER_VERTEX = 3;
-    private static float squareCoords[] = {
+    private static final float[] squareCoords = {
             -1.0f, 1.0f, 0.0f,   // top right
             -1.0f, -1.0f, 0.0f,   // bottom right
             1.0f, -1.0f, 0.0f,   // bottom left
             1.0f, 1.0f, 0.0f}; // top left
 
-    private final short drawOrder[] = {0, 1, 2, 0, 2, 3}; // order to draw vertices
+    private final short[] drawOrder = {0, 1, 2, 0, 2, 3}; // order to draw vertices
 
     private static final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 

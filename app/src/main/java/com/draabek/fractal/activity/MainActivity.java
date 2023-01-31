@@ -96,9 +96,6 @@ public class MainActivity extends AppCompatActivity {
 
         progressBar = findViewById(R.id.indeterminateBar);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         unveilCorrectView(FractalRegistry.getInstance().getCurrent().getName());
     }
@@ -164,21 +161,21 @@ public class MainActivity extends AppCompatActivity {
      * @param newFractal Name of the current fractal
      */
     private void unveilCorrectView(String newFractal) {
-        Fractal f = FractalRegistry.getInstance().get(newFractal);
-        if (f == null) {
+        Fractal fractal = FractalRegistry.getInstance().get(newFractal);
+        if (fractal == null) {
             Log.e(this.getClass().getName(), String.format("Fractal %s not found", newFractal));
-            f = FractalRegistry.getInstance().get("Mandelbrot");
+            fractal = FractalRegistry.getInstance().get("Mandelbrot");
         }
-        assert f != null;
+        assert fractal != null;
         if (currentView != null) currentView.setVisibility(View.GONE);
-        Class<? extends FractalViewWrapper> requiredViewClass = f.getViewWrapper();
+        Class<? extends FractalViewWrapper> requiredViewClass = fractal.getViewWrapper();
         FractalViewWrapper available = availableViews.get(requiredViewClass);
         if (available == null) {
             throw new RuntimeException("No appropriate view available");
         }
         currentView = available;
-        FractalRegistry.getInstance().setCurrent(f);
-        Log.d(LOG_KEY, f.getName() + " is current");
+        FractalRegistry.getInstance().setCurrent(fractal);
+        Log.d(LOG_KEY, fractal.getName() + " is current");
         currentView.setVisibility(View.VISIBLE);
         currentView.clear();
         currentView.setRenderListener(new RenderListener() {

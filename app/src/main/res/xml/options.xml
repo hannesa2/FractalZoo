@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:key="overall_options">
-    <CheckBoxPreference android:title="@string/prefs_use_gpu_string"
-        android:key="@string/prefs_use_gpu_key"/>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="overall_options">
+    <CheckBoxPreference
+        android:key="@string/prefs_use_gpu_key"
+        android:title="@string/prefs_use_gpu_string" />
 </PreferenceScreen> 
