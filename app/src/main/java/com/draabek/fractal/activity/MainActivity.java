@@ -106,9 +106,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            if (Utils.DEBUG) {
-                Log.d(LOG_KEY, "ACTION_UP");
-            }
+            Log.d(LOG_KEY, "ACTION_UP");
             if (getSupportActionBar() == null) return false;
             if (getSupportActionBar().isShowing()) getSupportActionBar().hide();
             else getSupportActionBar().show();
@@ -119,9 +117,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (Utils.DEBUG) {
-            Log.d(LOG_KEY, "onCreateOptionsMenu");
-        }
+        Log.d(LOG_KEY, "onCreateOptionsMenu");
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return super.onCreateOptionsMenu(menu);
@@ -130,35 +126,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (Utils.DEBUG) {
-            Log.d(LOG_KEY, "onOptionsItemSelected: " + item.getItemId());
-        }
+        Log.d(LOG_KEY, "onOptionsItemSelected: " + item.getItemId());
         switch (item.getItemId()) {
             case R.id.fractalList:
-                if (Utils.DEBUG) {
-                    Log.d(LOG_KEY, "Fractal list menu item pressed");
-                }
+                Log.d(LOG_KEY, "Fractal list menu item pressed");
                 Intent intent = new Intent(this, FractalListActivity.class);
                 intent.putExtra(FractalListActivity.INTENT_HIERARCHY_PATH,
                         getIntent().getStringExtra(FractalListActivity.INTENT_HIERARCHY_PATH));
                 startActivityForResult(intent, CHOOSE_FRACTAL_CODE);
                 return true;
             case R.id.save:
-                if (Utils.DEBUG) {
-                    Log.d(LOG_KEY, "Save menu item pressed");
-                }
+                Log.d(LOG_KEY, "Save menu item pressed");
                 return attemptSave();
             case R.id.parameters:
-                if (Utils.DEBUG) {
-                    Log.d(LOG_KEY, "Parameters menu item pressed");
-                }
+                Log.d(LOG_KEY, "Parameters menu item pressed");
                 Intent intent2 = new Intent(this, FractalParametersActivity.class);
                 startActivity(intent2);
                 return true;
             case R.id.options:
-                if (Utils.DEBUG) {
-                    Log.d(LOG_KEY, "Options menu item pressed");
-                }
+                Log.d(LOG_KEY, "Options menu item pressed");
                 Intent intent3 = new Intent(this, FractalPreferenceActivity.class);
                 startActivity(intent3);
                 return true;
@@ -192,9 +178,7 @@ public class MainActivity extends AppCompatActivity {
         }
         currentView = available;
         FractalRegistry.getInstance().setCurrent(f);
-        if (Utils.DEBUG) {
-            Log.d(LOG_KEY, f.getName() + " is current");
-        }
+        Log.d(LOG_KEY, f.getName() + " is current");
         currentView.setVisibility(View.VISIBLE);
         currentView.clear();
         currentView.setRenderListener(new RenderListener() {

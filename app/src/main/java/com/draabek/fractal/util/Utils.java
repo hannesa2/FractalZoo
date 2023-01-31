@@ -17,7 +17,6 @@ public class Utils {
     public static final String FRACTALS_PREFERENCE = "FRACTALS_PREFERENCE";
     public static final String PREFS_CURRENT_FRACTAL_KEY = "prefs_current_fractal_key";
     public static final String PREFS_CURRENT_FRACTAL_PATH = "prefs_current_fractal_path";
-    public static final boolean DEBUG = BuildConfig.DEBUG;
 
     public static Bitmap getBitmapFromAsset(AssetManager mgr, String path) {
         InputStream is = null;

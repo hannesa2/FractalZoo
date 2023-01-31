@@ -5,8 +5,6 @@ import android.opengl.GLES20;
 import android.opengl.GLUtils;
 import android.util.Log;
 
-import com.draabek.fractal.util.Utils;
-
 import java.util.Locale;
 import java.util.Map;
 
@@ -56,9 +54,7 @@ public class ShaderUtils {
         int error;
         if ((error = GLES20.glGetError()) != GLES20.GL_NO_ERROR) {
             Log.e(ShaderUtils.class.getName(), glOperation + ": glError " + error);
-            if (Utils.DEBUG) {
-                throw new RuntimeException(String.format(Locale.US, "%s: glError %d", glOperation, error));
-            }
+            throw new RuntimeException(String.format(Locale.US, "%s: glError %d", glOperation, error));
         }
     }
 
@@ -73,9 +69,7 @@ public class ShaderUtils {
             int uniformHandle = GLES20.glGetUniformLocation(shaderProgram, setting);
             if (uniformHandle == -1) {
                 Log.w(ShaderUtils.class.getName(), "Unable to find uniform for " + setting);
-                if (Utils.DEBUG) {
-                    throw new RuntimeException("glGetUniformLocation " + setting + " error");
-                }
+                throw new RuntimeException("glGetUniformLocation " + setting + " error");
             }
             // For now only support single float uniforms
             Object o = settings.get(setting);
@@ -96,9 +90,7 @@ public class ShaderUtils {
         int resolutionHandle = GLES20.glGetUniformLocation(shaderProgram, "resolution");
         if (resolutionHandle == -1) {
             Log.w(ShaderUtils.class.getName(), "Unable to find uniform for resolution");
-            if (Utils.DEBUG) {
-                throw new RuntimeException("glGetUniformLocation resolution error");
-            }
+            throw new RuntimeException("glGetUniformLocation resolution error");
         }
         GLES20.glUniform2f(resolutionHandle, width, height);
         ShaderUtils.checkGlError("glUniform2f");

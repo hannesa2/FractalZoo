@@ -90,9 +90,7 @@ public class FractalListActivity extends ListActivity {
         String item = ((Map<String, String>) (getListView().getItemAtPosition(position))).get("name");
         Fractal fractal = FractalRegistry.getInstance().get(item);
         if (fractal == null) {
-            if (Utils.DEBUG) {
-                Log.d(LOG_KEY, String.format("Menu item %s clicked", item));
-            }
+            Log.d(LOG_KEY, String.format("Menu item %s clicked", item));
             Intent intent = new Intent(this, FractalListActivity.class);
             //String path = String.join(" ", hierarchyPath); //API 26
             StringBuilder pathBuilder = new StringBuilder();
@@ -108,9 +106,7 @@ public class FractalListActivity extends ListActivity {
             if (!path.equals("")) intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString());
             startActivity(intent);
         } else {
-            if (Utils.DEBUG) {
-                Log.d(LOG_KEY, String.format("Fractal %s clicked", fractal.getName()));
-            }
+            Log.d(LOG_KEY, String.format("Fractal %s clicked", fractal.getName()));
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.getName());
             intent.putExtra(INTENT_HIERARCHY_PATH, getIntent().getStringExtra(INTENT_HIERARCHY_PATH));

@@ -33,7 +33,6 @@ import com.draabek.fractal.activity.SaveBitmapActivity;
 import com.draabek.fractal.fractal.FractalRegistry;
 import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.RenderListener;
-import com.draabek.fractal.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -109,9 +108,7 @@ public class MyGLSurfaceView extends GLSurfaceView implements FractalViewWrapper
         }
         switch (e.getAction()) {
             case MotionEvent.ACTION_MOVE:
-                if (Utils.DEBUG) {
-                    Log.d(this.getClass().getName(), "GL MOVE");
-                }
+                Log.d(this.getClass().getName(), "GL MOVE");
                 if (e.getPointerCount() == 1) {
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;

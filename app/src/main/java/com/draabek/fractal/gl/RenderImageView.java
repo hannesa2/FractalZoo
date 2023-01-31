@@ -17,7 +17,6 @@ import com.draabek.fractal.activity.SaveBitmapActivity;
 import com.draabek.fractal.fractal.FractalRegistry;
 import com.draabek.fractal.fractal.FractalViewWrapper;
 import com.draabek.fractal.fractal.RenderListener;
-import com.draabek.fractal.util.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -205,9 +204,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                 if (mPreviousY == 0) mPreviousY = y;
 
                 gestureInProgress = true;
-                if (Utils.DEBUG) {
-                    Log.d(this.getClass().getName(), "GL MOVE");
-                }
+                Log.d(this.getClass().getName(), "GL MOVE");
                 if (e.getPointerCount() == 1) {
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;

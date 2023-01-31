@@ -9,7 +9,6 @@ import com.draabek.fractal.activity.FractalZooApplication;
 import com.draabek.fractal.gl.GLSLFractal;
 import com.draabek.fractal.palette.ColorPalette;
 import com.draabek.fractal.util.SimpleTree;
-import com.draabek.fractal.util.Utils;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -73,12 +72,7 @@ public final class FractalRegistry {
             }
             if (fractal instanceof GLSLFractal) {
                 if (loadedShaders == null) {
-                    if (Utils.DEBUG) {
-                        throw new RuntimeException("No shaders loaded for " + fractal);
-                    } else {
-                        Log.e(LOG_KEY, "No shaders loaded for " + fractal);
-                        return null;
-                    }
+                    throw new RuntimeException("No shaders loaded for " + fractal);
                 }
                 ((GLSLFractal) fractal).setShaders(loadedShaders);
             }
@@ -99,11 +93,7 @@ public final class FractalRegistry {
         } catch (IllegalAccessException e) {
             Log.w(LOG_KEY, "Cannot access fractal class " + clazz);
         } catch (InstantiationException e) {
-            if (Utils.DEBUG) {
-                throw new RuntimeException(e);
-            } else {
-                Log.w(LOG_KEY, "Cannot instantiate fractal class " + clazz);
-            }
+            throw new RuntimeException(e);
         }
         return null;
     }
