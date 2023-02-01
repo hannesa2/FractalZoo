@@ -27,7 +27,7 @@ class FractalListActivity : ListActivity() {
         super.onCreate(savedInstanceState)
         val keyPathStr = intent.getStringExtra(INTENT_HIERARCHY_PATH)
         val path = keyPathStr?.split("\\|".toRegex())?.dropLastWhile { it.isEmpty() }?.toTypedArray() ?: arrayOf()
-        hierarchyPath = ArrayDeque(Arrays.asList(*path))
+        hierarchyPath = ArrayDeque(mutableListOf(*path))
         val data: MutableList<Map<String, String?>> = ArrayList()
         for (item in instance.getOnLevel(hierarchyPath)!!) {
             val row: MutableMap<String, String?> = HashMap()

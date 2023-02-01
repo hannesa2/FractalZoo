@@ -10,7 +10,7 @@ import java.util.*
 class SimpleTree<T>(data: T) {
     @JvmField
     var data: T
-    var parent: SimpleTree<T>? = null
+    private var parent: SimpleTree<T>? = null
     @JvmField
     var children: MutableList<SimpleTree<T>>
     val isRoot: Boolean
@@ -60,8 +60,8 @@ class SimpleTree<T>(data: T) {
     }
 
     fun putPath(pathParam: Array<T>, value: T) {
-        val l = Arrays.asList(*pathParam)
-        Collections.reverse(l)
+        val l = mutableListOf(*pathParam)
+        l.reverse()
         val path = ArrayDeque(l)
         putPath(path, value)
     }
@@ -75,8 +75,8 @@ class SimpleTree<T>(data: T) {
     }
 
     fun getChildren(pathParam: Array<T>): List<T>? {
-        val l = Arrays.asList(*pathParam)
-        Collections.reverse(l)
+        val l = mutableListOf(*pathParam)
+        l.reverse()
         val path = ArrayDeque(l)
         return getChildren(path)
     }
