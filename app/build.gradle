@@ -43,8 +43,7 @@ android {
         }
     }
     lint {
-        abortOnError false
-        disable 'MinSdkTooLow', 'OldTargetApi', 'SameReturnValue', 'SameParameterValue', 'WeakerAccess'
+        abortOnError true
     }
     namespace 'com.draabek.fractal'
 }
