@@ -61,7 +61,7 @@ class Square {
         updateCurrentFractal()
     }
 
-    fun updateCurrentFractal() {
+    private fun updateCurrentFractal() {
         val f = instance.current
         check(f is GLSLFractal) { "Current fractal not instance of " + GLSLFractal::class.java.name }
         currentFractal = f
