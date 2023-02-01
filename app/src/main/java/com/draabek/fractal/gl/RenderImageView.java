@@ -108,7 +108,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                             this.post(() -> {
                                 this.setImageBitmap(bitmap);
                                 this.renderingFlag = false;
-                                this.renderImageCache.add(bitmap, FractalRegistry.getInstance().getCurrent().getName());
+                                this.renderImageCache.add(bitmap, FractalRegistry.Companion.getInstance().getCurrent().getName());
                                 this.renderListener.onRenderComplete(System.currentTimeMillis() - start);
                             });
                         }
@@ -176,7 +176,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
         renderingFlag = true;
         if (getBitmap() != null) {
             Bitmap cachedBitmap = renderImageCache.get(
-                    FractalRegistry.getInstance().getCurrent().getName());
+                    FractalRegistry.Companion.getInstance().getCurrent().getName());
             setImageBitmap(cachedBitmap);
         }
     }
@@ -203,27 +203,27 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                 if (e.getPointerCount() == 1) {
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;
-                    Float fractalX = FractalRegistry.getInstance().getCurrent()
+                    Float fractalX = FractalRegistry.Companion.getInstance().getCurrent()
                             .getParameters().get("centerX");
-                    Float fractalY = FractalRegistry.getInstance().getCurrent()
+                    Float fractalY = FractalRegistry.Companion.getInstance().getCurrent()
                             .getParameters().get("centerY");
                     if ((fractalX == null) && (fractalY == null)) {
                         Timber.i("Fractal has no movable center");
                     } else {
                         if (fractalX != null) {
-                            FractalRegistry.getInstance().getCurrent()
+                            FractalRegistry.Companion.getInstance().getCurrent()
                                     .getParameters().put("centerX", fractalX + dx * TOUCH_SCALE_FACTOR);
                             Timber.v("X shift: %s", dx * TOUCH_SCALE_FACTOR);
                         }
                         if (fractalY != null) {
                             //- instead of + because OpenGL has y axis upside down
-                            FractalRegistry.getInstance().getCurrent()
+                            FractalRegistry.Companion.getInstance().getCurrent()
                                     .getParameters().put("centerY", fractalY - dy * TOUCH_SCALE_FACTOR);
                             Timber.v("Y shift: %s", dy * TOUCH_SCALE_FACTOR);
                         }
                     }
                 } else if ((e.getPointerCount() == 2) && ((mPreviousY2 > 0) || (mPreviousX2 > 0))) {
-                    Float scale = FractalRegistry.getInstance().getCurrent()
+                    Float scale = FractalRegistry.Companion.getInstance().getCurrent()
                             .getParameters().get("scale");
                     if (scale == null) {
                         Timber.i("Fractal is not scaleable");
@@ -233,7 +233,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                                 (mPreviousY - mPreviousY2) * (mPreviousY - mPreviousY2));
                         float newDist = (float) Math.sqrt((x - x2) * (x - x2) + (y - y2) * (y - y2));
                         if (oldDist > 0) {
-                            FractalRegistry.getInstance().getCurrent().getParameters().put("scale",
+                            FractalRegistry.Companion.getInstance().getCurrent().getParameters().put("scale",
                                     scale * newDist / oldDist);
                             Timber.v("Scale: %s", scale * newDist / oldDist);
                         }
