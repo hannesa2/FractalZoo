@@ -25,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var currentView: FractalViewWrapper? = null
     private lateinit var prefs: SharedPreferences
     private var progressBar: ProgressBar? = null
+
     @Throws(IOException::class)
     private fun readFully(inputStream: InputStream): String {
         val reader = BufferedReader(InputStreamReader(inputStream))
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         try {
-            instance.init(readFractalMetadata())
+            instance.init(MainActivity@ this, readFractalMetadata())
         } catch (e: IOException) {
             Log.e(LOG_KEY, "Exception loading fractal metadata")
             throw RuntimeException(e)
@@ -158,12 +159,8 @@ class MainActivity : AppCompatActivity() {
         currentView!!.clear()
         currentView!!.setRenderListener(object : RenderListener {
             override fun onRenderRequested() {
-                Log.i(
-                    this.javaClass.name, String.format(
-                        "Rendering requested on %s",
-                        instance.current!!.name
-                    )
-                )
+                Log.i(this.javaClass.name, String.format("Rendering requested on %s", instance.current!!.name))
+                Log.i(this.javaClass.name, String.format("Rendering requested on %s", instance.current!!.name))
                 progressBar!!.post { progressBar!!.visibility = View.VISIBLE }
             }
 

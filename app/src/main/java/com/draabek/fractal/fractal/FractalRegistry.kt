@@ -2,7 +2,6 @@ package com.draabek.fractal.fractal
 
 import android.content.Context
 import android.util.Log
-import com.draabek.fractal.activity.FractalZooApplication
 import com.draabek.fractal.gl.GLSLFractal
 import com.draabek.fractal.palette.ColorPalette
 import com.draabek.fractal.util.SimpleTree
@@ -26,15 +25,14 @@ class FractalRegistry private constructor() {
         return fractals
     }
 
-    private fun fractalFromJsonObject(jsonObject: JsonObject): Fractal? {
+    private fun fractalFromJsonObject(context: Context, jsonObject: JsonObject): Fractal? {
         val name = jsonObject["name"].asString
         val clazz = jsonObject["class"].asString
         val shaders = if (jsonObject["shaders"] != null) jsonObject["shaders"].asString else null
         val settingsString = if (jsonObject["parameters"] != null) jsonObject["parameters"].toString() else null
         val thumbPath = if (jsonObject["thumbnail"] != null) jsonObject["thumbnail"].asString else null
         val paletteString = if (jsonObject["palette"] != null) jsonObject["palette"].asString else null
-        val ctx = FractalZooApplication.getContext()
-        val loadedShaders = loadShaders(ctx, shaders)
+        val loadedShaders = loadShaders(context, shaders)
         val cls: Class<*>
         try {
             cls = Class.forName(clazz)
@@ -103,30 +101,26 @@ class FractalRegistry private constructor() {
         }
     }
 
-    private fun processJsonElement(jsonElement: JsonElement) {
+    private fun processJsonElement(context: Context, jsonElement: JsonElement) {
         val jsonObject = jsonElement.asJsonObject
         val pathInList = jsonObject["path"].asString
         jsonObject.remove("path")
         val s = pathInList.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val fractal = fractalFromJsonObject(jsonObject)
+        val fractal = fractalFromJsonObject(context, jsonObject)
         if (fractal != null) {
             fractals[fractal.name] = fractal
             hierarchy.putPath(s, fractal.name)
         } else {
-            Log.e(
-                LOG_KEY, String.format(
-                    "Cannot load fractal %s",
-                    jsonObject["name"].asString
-                )
-            )
+            Log.e(LOG_KEY, String.format("Cannot load fractal %s", jsonObject["name"].asString))
         }
     }
 
-    fun init(fractalList: Array<String?>) {
-        if (initialized) return
+    fun init(context: Context, fractalList: Array<String?>) {
+        if (initialized)
+            return
         for (fractal in fractalList) {
             val jsonElement = Gson().fromJson(fractal, JsonElement::class.java)
-            processJsonElement(jsonElement)
+            processJsonElement(context, jsonElement)
         }
         initialized = true
     }
@@ -150,22 +144,7 @@ class FractalRegistry private constructor() {
     companion object {
         private val LOG_KEY = FractalRegistry::class.java.name
 
-        private var _instance: FractalRegistry? = null
-            get() {
-                if (field == null) { //throw new IllegalStateException("Fractal registry not initialized");
-                    field = FractalRegistry()
-                }
-                return field
-            }
-            private set
-
         @JvmStatic
-        val instance: FractalRegistry
-            get() {
-                if (_instance == null) { //throw new IllegalStateException("Fractal registry not initialized");
-                    _instance = FractalRegistry()
-                }
-                return _instance!!
-            }
+        val instance = FractalRegistry()
     }
 }
