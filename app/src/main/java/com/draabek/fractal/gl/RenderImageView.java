@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
-import android.os.Environment;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.Toast;
@@ -23,6 +21,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
+
+import timber.log.Timber;
 
 /**
  * Render image shaders asynchronously using OpenGL ES 2.0
@@ -145,11 +145,11 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
             File tmpFile = File.createTempFile("bitmap", ".img", getContext().getCacheDir());
             Bitmap bitmap = this.getBitmap();
             for (int i = 0; (i < 60) && (bitmap == null); i++) {
-                Log.d(this.getClass().getName(), "Wait for draw " + i);
+                Timber.d("Wait for draw %s", i);
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Timber.e(e);
                 }
                 bitmap = this.getBitmap();
             }
@@ -161,7 +161,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
             getContext().startActivity(intent);
         } catch (IOException e) {
             Toast.makeText(this.getContext(), "Could not save current image", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+            Timber.e(e);
         }
     }
 
@@ -204,7 +204,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                 if (mPreviousY == 0) mPreviousY = y;
 
                 gestureInProgress = true;
-                Log.d(this.getClass().getName(), "GL MOVE");
+                Timber.d("GL MOVE");
                 if (e.getPointerCount() == 1) {
                     float dx = x - mPreviousX;
                     float dy = y - mPreviousY;
@@ -213,25 +213,25 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                     Float fractalY = FractalRegistry.getInstance().getCurrent()
                             .getParameters().get("centerY");
                     if ((fractalX == null) && (fractalY == null)) {
-                        Log.i(this.getClass().getName(), "Fractal has no movable center");
+                        Timber.i("Fractal has no movable center");
                     } else {
                         if (fractalX != null) {
                             FractalRegistry.getInstance().getCurrent()
                                     .getParameters().put("centerX", fractalX + dx * TOUCH_SCALE_FACTOR);
-                            Log.v(this.getClass().getName(), "X shift: " + dx * TOUCH_SCALE_FACTOR);
+                            Timber.v("X shift: %s", dx * TOUCH_SCALE_FACTOR);
                         }
                         if (fractalY != null) {
                             //- instead of + because OpenGL has y axis upside down
                             FractalRegistry.getInstance().getCurrent()
                                     .getParameters().put("centerY", fractalY - dy * TOUCH_SCALE_FACTOR);
-                            Log.v(this.getClass().getName(), "Y shift: " + dy * TOUCH_SCALE_FACTOR);
+                            Timber.v("Y shift: %s", dy * TOUCH_SCALE_FACTOR);
                         }
                     }
                 } else if ((e.getPointerCount() == 2) && ((mPreviousY2 > 0) || (mPreviousX2 > 0))) {
                     Float scale = FractalRegistry.getInstance().getCurrent()
                             .getParameters().get("scale");
                     if (scale == null) {
-                        Log.i(this.getClass().getName(), "Fractal is not scaleable");
+                        Timber.i("Fractal is not scaleable");
                     } else {
                         // Probably abs() is sufficient, but this is better for clarity
                         float oldDist = (float) Math.sqrt((mPreviousX - mPreviousX2) * (mPreviousX - mPreviousX2) +
@@ -240,7 +240,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                         if (oldDist > 0) {
                             FractalRegistry.getInstance().getCurrent().getParameters().put("scale",
                                     scale * newDist / oldDist);
-                            Log.v(this.getClass().getName(), "Scale: " + scale * newDist / oldDist);
+                            Timber.v("Scale: %s", scale * newDist / oldDist);
                         }
                     }
                 }

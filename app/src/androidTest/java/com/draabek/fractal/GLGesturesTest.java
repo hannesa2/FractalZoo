@@ -72,7 +72,7 @@ public class GLGesturesTest {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Timber.e(e);
                 }
             } catch (NoMatchingViewException e) {
                 return;

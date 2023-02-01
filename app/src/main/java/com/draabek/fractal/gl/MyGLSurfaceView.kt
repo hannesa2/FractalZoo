@@ -22,7 +22,6 @@ import android.graphics.Matrix
 import android.opengl.GLES20
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.widget.Toast
 import com.draabek.fractal.R
@@ -30,6 +29,7 @@ import com.draabek.fractal.activity.SaveBitmapActivity
 import com.draabek.fractal.fractal.FractalRegistry.Companion.instance
 import com.draabek.fractal.fractal.FractalViewWrapper
 import com.draabek.fractal.fractal.RenderListener
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -90,31 +90,31 @@ class MyGLSurfaceView : GLSurfaceView, FractalViewWrapper {
         }
         when (e.action) {
             MotionEvent.ACTION_MOVE -> {
-                Log.d(this.javaClass.name, "GL MOVE")
+                Timber.d("GL MOVE")
                 if (e.pointerCount == 1) {
                     val dx = x - mPreviousX
                     val dy = y - mPreviousY
                     val fractalX = instance.current!!.parameters["centerX"]
                     val fractalY = instance.current!!.parameters["centerY"]
                     if (fractalX == null && fractalY == null) {
-                        Log.i(this.javaClass.name, "Fractal has no movable center")
+                        Timber.i("Fractal has no movable center")
                     } else {
                         if (fractalX != null) {
                             instance.current!!
                                 .parameters["centerX"] = fractalX + dx * TOUCH_SCALE_FACTOR
-                            Log.v(this.javaClass.name, "X shift: " + dx * TOUCH_SCALE_FACTOR)
+                            Timber.v("X shift: " + dx * TOUCH_SCALE_FACTOR)
                         }
                         if (fractalY != null) {
                             //- instead of + because OpenGL has y axis upside down
                             instance.current!!
                                 .parameters["centerY"] = fractalY - dy * TOUCH_SCALE_FACTOR
-                            Log.v(this.javaClass.name, "Y shift: " + dy * TOUCH_SCALE_FACTOR)
+                            Timber.v("Y shift: " + dy * TOUCH_SCALE_FACTOR)
                         }
                     }
                 } else if (e.pointerCount == 2 && (mPreviousY2 > 0 || mPreviousX2 > 0)) {
                     val scale = instance.current!!.parameters["scale"]
                     if (scale == null) {
-                        Log.i(this.javaClass.name, "Fractal is not scaleable")
+                        Timber.i("Fractal is not scaleable")
                     } else {
                         // Probably abs() is sufficient, but this is better for clarity
                         val oldDist = Math.sqrt(
@@ -124,7 +124,7 @@ class MyGLSurfaceView : GLSurfaceView, FractalViewWrapper {
                         val newDist = Math.sqrt(((x - x2) * (x - x2) + (y - y2) * (y - y2)).toDouble()).toFloat()
                         if (oldDist > 0) {
                             instance.current!!.parameters["scale"] = scale * newDist / oldDist
-                            Log.v(this.javaClass.name, "Scale: " + scale * newDist / oldDist)
+                            Timber.v("Scale: " + scale * newDist / oldDist)
                         }
                     }
                 }
@@ -152,7 +152,7 @@ class MyGLSurfaceView : GLSurfaceView, FractalViewWrapper {
             context.startActivity(intent)
         } catch (e: IOException) {
             Toast.makeText(this.context, "Could not save current image", Toast.LENGTH_SHORT).show()
-            e.printStackTrace()
+            Timber.e(e)
         }
     }
 

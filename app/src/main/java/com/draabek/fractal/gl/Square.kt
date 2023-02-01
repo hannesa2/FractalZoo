@@ -17,8 +17,8 @@ package com.draabek.fractal.gl
 
 import android.graphics.Bitmap
 import android.opengl.GLES20
-import android.util.Log
 import com.draabek.fractal.fractal.FractalRegistry.Companion.instance
+import timber.log.Timber
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.nio.FloatBuffer
@@ -85,7 +85,7 @@ class Square {
         val linkStatus = IntArray(1)
         GLES20.glGetProgramiv(mProgram, GLES20.GL_LINK_STATUS, linkStatus, 0)
         if (linkStatus[0] != GLES20.GL_TRUE) {
-            Log.e(this.javaClass.name, "Could not link program")
+            Timber.e("Could not link program")
             val infoLog = GLES20.glGetShaderInfoLog(mProgram)
             GLES20.glDeleteProgram(mProgram)
             GLES20.glFlush()
@@ -94,7 +94,7 @@ class Square {
                 "Failed to compile shader for %s\n%s",
                 instance.current!!.name, infoLog
             )
-            Log.e(LOG_KEY, msg)
+            Timber.e(msg)
             //this sequence is strange, hopefully there will not be infinite loop
             instance.current = instance["Mandelbrot"]
         }
@@ -150,8 +150,6 @@ class Square {
     }
 
     companion object {
-        val LOG_KEY = Square::class.java.name
-
         // number of coordinates per vertex in this array
         private const val COORDS_PER_VERTEX = 3
         private val squareCoords = floatArrayOf(

@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -19,6 +18,7 @@ import androidx.core.app.ActivityCompat.OnRequestPermissionsResultCallback
 import androidx.core.content.ContextCompat
 import com.draabek.fractal.R
 import com.draabek.fractal.fractal.FractalRegistry.Companion.instance
+import timber.log.Timber
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -57,7 +57,7 @@ class SaveBitmapActivity : AppCompatActivity(), OnRequestPermissionsResultCallba
                     //       getString(R.string.save_bitmap_set_wallpaper_rationale), REQUEST_WALLPAPER);
                     setAsWallpaper()
                 } else {
-                    Log.e(this.javaClass.name, "Unknown radio button in SaveBitmapActivity")
+                    Timber.e( "Unknown radio button in SaveBitmapActivity")
                 }
             }
         })
@@ -68,11 +68,11 @@ class SaveBitmapActivity : AppCompatActivity(), OnRequestPermissionsResultCallba
         val path = filename.substring(0, filename.lastIndexOf("/") - 1)
         val dir = File(path)
         if (!storageAvailable()) {
-            Log.e(LOG_KEY, "External storage not available")
+            Timber.e("External storage not available")
             return
         }
         if (!dir.exists() && !dir.mkdirs()) {
-            Log.e(LOG_KEY, "Directory specified does not exist and could not be created")
+            Timber.e("Directory specified does not exist and could not be created")
             return
         }
         val f = File(filename)
@@ -91,7 +91,7 @@ class SaveBitmapActivity : AppCompatActivity(), OnRequestPermissionsResultCallba
             myWallpaperManager.setStream(FileInputStream(bitmapFile))
         } catch (e: IOException) {
             // Just be ugly in the logcat
-            e.printStackTrace()
+            Timber.e(e)
             finish()
         }
         finish()
@@ -153,13 +153,13 @@ class SaveBitmapActivity : AppCompatActivity(), OnRequestPermissionsResultCallba
             destChannel = FileOutputStream(path).channel
             destChannel.transferFrom(sourceChannel, 0, sourceChannel.size())
         } catch (e: IOException) {
-            e.printStackTrace()
+            Timber.e(e)
         } finally {
             try {
                 sourceChannel?.close()
                 destChannel?.close()
             } catch (e: IOException) {
-                e.printStackTrace()
+                Timber.e(e)
             }
         }
     }

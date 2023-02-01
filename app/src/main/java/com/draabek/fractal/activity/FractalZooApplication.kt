@@ -1,10 +1,5 @@
 package com.draabek.fractal.activity
 
-import android.app.Application
+import info.hannes.logcat.LoggingApplication
 
-class FractalZooApplication : Application() {
-    override fun onCreate() {
-        super.onCreate()
-    }
-
-}
+class FractalZooApplication : LoggingApplication()

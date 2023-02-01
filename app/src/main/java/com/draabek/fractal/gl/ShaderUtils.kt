@@ -3,7 +3,7 @@ package com.draabek.fractal.gl
 import android.graphics.Bitmap
 import android.opengl.GLES20
 import android.opengl.GLUtils
-import android.util.Log
+import timber.log.Timber
 import java.util.*
 
 /**
@@ -32,7 +32,8 @@ object ShaderUtils {
         GLES20.glShaderSource(shader, shaderCode)
         GLES20.glCompileShader(shader)
         val s = GLES20.glGetShaderInfoLog(shader)
-        if (s != null && s != "") Log.d(ShaderUtils::class.java.name, s)
+        if (s != null && s != "")
+            Timber.d(s)
         return shader
     }
 
@@ -52,7 +53,7 @@ object ShaderUtils {
     fun checkGlError(glOperation: String) {
         var error: Int
         if (GLES20.glGetError().also { error = it } != GLES20.GL_NO_ERROR) {
-            Log.e(ShaderUtils::class.java.name, "$glOperation: glError $error")
+            Timber.e("$glOperation: glError $error")
             throw RuntimeException(String.format(Locale.US, "%s: glError %d", glOperation, error))
         }
     }
@@ -67,7 +68,7 @@ object ShaderUtils {
         for (setting in settings.keys) {
             val uniformHandle = GLES20.glGetUniformLocation(shaderProgram, setting)
             if (uniformHandle == -1) {
-                Log.w(ShaderUtils::class.java.name, "Unable to find uniform for $setting")
+                Timber.w("Unable to find uniform for $setting")
                 throw RuntimeException("glGetUniformLocation $setting error")
             }
             // For now only support single float uniforms
@@ -88,7 +89,7 @@ object ShaderUtils {
     fun applyResolutionUniform(width: Int, height: Int, shaderProgram: Int) {
         val resolutionHandle = GLES20.glGetUniformLocation(shaderProgram, "resolution")
         if (resolutionHandle == -1) {
-            Log.w(ShaderUtils::class.java.name, "Unable to find uniform for resolution")
+            Timber.w("Unable to find uniform for resolution")
             throw RuntimeException("glGetUniformLocation resolution error")
         }
         GLES20.glUniform2f(resolutionHandle, width.toFloat(), height.toFloat())
