@@ -7,10 +7,8 @@ import android.graphics.Paint;
 import com.draabek.fractal.canvas.CanvasFractal;
 
 /**
- * Created by Vojta on 12.09.2017.
  * Based on https://rosettacode.org/wiki/Fractal_tree#Java
  */
-
 public class FractalTree extends CanvasFractal {
     @Override
     public void draw(Canvas canvas) {
