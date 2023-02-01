@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.*
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,7 @@ import com.draabek.fractal.fractal.FractalViewWrapper
 import com.draabek.fractal.fractal.RenderListener
 import com.draabek.fractal.gl.RenderImageView
 import com.draabek.fractal.util.Utils
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
         try {
             instance.init(MainActivity@ this, readFractalMetadata())
         } catch (e: IOException) {
-            Log.e(LOG_KEY, "Exception loading fractal metadata")
+            Timber.e("Exception loading fractal metadata")
             throw RuntimeException(e)
         }
         prefs = PreferenceManager.getDefaultSharedPreferences(this)
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
         if (event.action == MotionEvent.ACTION_UP) {
-            Log.d(LOG_KEY, "ACTION_UP")
+            Timber.d("ACTION_UP")
             if (supportActionBar == null) return false
             if (supportActionBar!!.isShowing) supportActionBar!!.hide() else supportActionBar!!.show()
             return true
@@ -93,17 +93,16 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        Log.d(LOG_KEY, "onCreateOptionsMenu")
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        Log.d(LOG_KEY, "onOptionsItemSelected: " + item.itemId)
+        Timber.d("onOptionsItemSelected: " + item.itemId)
         return when (item.itemId) {
             R.id.fractalList -> {
-                Log.d(LOG_KEY, "Fractal list menu item pressed")
+                Timber.d("Fractal list menu item pressed")
                 val intent = Intent(this, FractalListActivity::class.java)
                 intent.putExtra(
                     FractalListActivity.INTENT_HIERARCHY_PATH,
@@ -113,17 +112,17 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             R.id.save -> {
-                Log.d(LOG_KEY, "Save menu item pressed")
+                Timber.d("Save menu item pressed")
                 attemptSave()
             }
             R.id.parameters -> {
-                Log.d(LOG_KEY, "Parameters menu item pressed")
+                Timber.d("Parameters menu item pressed")
                 val intent2 = Intent(this, FractalParametersActivity::class.java)
                 startActivity(intent2)
                 true
             }
             R.id.options -> {
-                Log.d(LOG_KEY, "Options menu item pressed")
+                Timber.d("Options menu item pressed")
                 val intent3 = Intent(this, FractalPreferenceActivity::class.java)
                 startActivity(intent3)
                 true
@@ -145,7 +144,7 @@ class MainActivity : AppCompatActivity() {
     private fun unveilCorrectView(newFractal: String?) {
         var fractal = instance[newFractal!!]
         if (fractal == null) {
-            Log.e(this.javaClass.name, String.format("Fractal %s not found", newFractal))
+            Timber.e(String.format("Fractal %s not found", newFractal))
             fractal = instance["Mandelbrot"]
         }
         assert(fractal != null)
@@ -154,18 +153,17 @@ class MainActivity : AppCompatActivity() {
         val available = availableViews[requiredViewClass] ?: throw RuntimeException("No appropriate view available")
         currentView = available
         instance.current = fractal
-        Log.d(LOG_KEY, fractal.name + " is current")
+        Timber.d("<${fractal.name}> is current")
         currentView!!.setVisibility(View.VISIBLE)
         currentView!!.clear()
         currentView!!.setRenderListener(object : RenderListener {
             override fun onRenderRequested() {
-                Log.i(this.javaClass.name, String.format("Rendering requested on %s", instance.current!!.name))
-                Log.i(this.javaClass.name, String.format("Rendering requested on %s", instance.current!!.name))
+                Timber.i(String.format("Rendering requested on %s", instance.current!!.name))
                 progressBar!!.post { progressBar!!.visibility = View.VISIBLE }
             }
 
             override fun onRenderComplete(millis: Long) {
-                Log.i(this.javaClass.name, String.format("Rendering complete in %d ms", millis))
+                Timber.i(String.format("Rendering complete in %d ms", millis))
                 progressBar!!.post { if (!currentView!!.isRendering) progressBar!!.visibility = View.GONE }
             }
         })
@@ -177,7 +175,7 @@ class MainActivity : AppCompatActivity() {
                 val pickedFractal = data!!.getStringExtra(CURRENT_FRACTAL_KEY)
                 unveilCorrectView(pickedFractal)
             } catch (e: Exception) {
-                Log.e(LOG_KEY, "Exception on fractal switch")
+                Timber.e("Exception on fractal switch")
                 e.printStackTrace()
             }
         }
@@ -193,7 +191,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        private val LOG_KEY = MainActivity::class.java.name
         const val CURRENT_FRACTAL_KEY = "current_fractal"
         const val CHOOSE_FRACTAL_CODE = 1
     }

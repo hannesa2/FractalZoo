@@ -6,7 +6,6 @@ import android.content.res.Resources.NotFoundException
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ImageView
@@ -17,6 +16,7 @@ import com.draabek.fractal.R
 import com.draabek.fractal.fractal.FractalRegistry.Companion.instance
 import com.draabek.fractal.util.Utils
 import com.draabek.fractal.util.Utils.getBitmapFromAsset
+import timber.log.Timber
 import java.util.*
 
 class FractalListActivity : ListActivity() {
@@ -51,13 +51,11 @@ class FractalListActivity : ListActivity() {
                     val bmp = getBitmapFromAsset(assets, s)
                     view.setImageBitmap(bmp)
                 }
-                Log.v(LOG_KEY, "Thumb uri: $data1")
+                Timber.v("Thumb uri: $data1")
             } else if (view is TextView) {
-                val localizedName: String?
-                localizedName = try {
+                val localizedName: String? = try {
                     resources.getString(
-                        resources
-                            .getIdentifier(data1 as String?, "string", "com.draabek.fractal")
+                        resources.getIdentifier(data1 as String?, "string", "com.draabek.fractal")
                     )
                 } catch (e: NotFoundException) {
                     data1 as String?
@@ -73,7 +71,7 @@ class FractalListActivity : ListActivity() {
         val item = (listView.getItemAtPosition(position) as Map<String?, String?>)["name"]
         val fractal = instance[item!!]
         if (fractal == null) {
-            Log.d(LOG_KEY, String.format("Menu item %s clicked", item))
+            Timber.d(String.format("Menu item %s clicked", item))
             val intent = Intent(this, FractalListActivity::class.java)
             //String path = String.join(" ", hierarchyPath); //API 26
             val pathBuilder = StringBuilder()
@@ -89,7 +87,7 @@ class FractalListActivity : ListActivity() {
             if (path != "") intent.putExtra(INTENT_HIERARCHY_PATH, pathBuilder.toString())
             startActivity(intent)
         } else {
-            Log.d(LOG_KEY, String.format("Fractal %s clicked", fractal.name))
+            Timber.d(String.format("Fractal %s clicked", fractal.name))
             val intent = Intent(this, MainActivity::class.java)
             intent.putExtra(MainActivity.CURRENT_FRACTAL_KEY, fractal.name)
             intent.putExtra(INTENT_HIERARCHY_PATH, getIntent().getStringExtra(INTENT_HIERARCHY_PATH))
@@ -120,6 +118,5 @@ class FractalListActivity : ListActivity() {
 
     companion object {
         const val INTENT_HIERARCHY_PATH = "INTENT_HIERARCHY_PATH"
-        private val LOG_KEY = FractalListActivity::class.java.name
     }
 }

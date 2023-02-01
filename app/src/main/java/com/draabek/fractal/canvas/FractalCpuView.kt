@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.graphics.*
 import android.preference.PreferenceManager
 import android.util.AttributeSet
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -18,6 +17,7 @@ import com.draabek.fractal.fractal.FractalRegistry.Companion.instance
 import com.draabek.fractal.fractal.FractalViewWrapper
 import com.draabek.fractal.fractal.RenderListener
 import com.draabek.fractal.util.Utils
+import timber.log.Timber
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -58,11 +58,11 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
             renderListener!!.onRenderRequested()
         }
         val start = System.currentTimeMillis()
-        Log.d(LOG_KEY, "onDraw")
+        Timber.d("onDraw")
         surfaceHolder = getHolder()
         synchronized(surfaceHolder!!) {
             if (fractalBitmap == null || fractalBitmap!!.height != canvas.height || fractalBitmap!!.width != canvas.width || bufferCanvas == null) {
-                Log.v(LOG_KEY, "Reallocate buffer")
+                Timber.v("Reallocate buffer")
                 fractalBitmap = Bitmap.createBitmap(
                     width, height,
                     Bitmap.Config.ARGB_8888
@@ -70,17 +70,17 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
                 bufferCanvas = Canvas(fractalBitmap!!)
             }
             if (fractal is BitmapDrawFractal) {
-                Log.v(LOG_KEY, "Start drawing to buffer")
+                Timber.v("Start drawing to buffer")
                 fractalBitmap = (fractal as BitmapDrawFractal).redrawBitmap(fractalBitmap, position)
             } else if (fractal is CanvasFractal) {
-                Log.v(LOG_KEY, "Draw to canvas")
+                Timber.v("Draw to canvas")
                 (fractal as CanvasFractal).draw(bufferCanvas)
             } else {
                 throw RuntimeException("Wrong fractal type for " + this.javaClass.name)
             }
             canvas.drawBitmap(fractalBitmap!!, 0f, 0f, paint)
         }
-        Log.d(LOG_KEY, "finished onDraw")
+        Timber.d("finished onDraw")
         isRendering = false
         if (renderListener != null) {
             renderListener!!.onRenderComplete(System.currentTimeMillis() - start)
@@ -92,14 +92,14 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
         height: Int
     ) {
         this.surfaceHolder = holder
-        Log.d(LOG_KEY, "surface changed")
         fractal = instance.current as CpuFractal?
+        Timber.d("surface changed <${fractal?.name}>")
         invalidate()
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
         setWillNotDraw(false)
-        Log.d(LOG_KEY, "surface created")
+        Timber.d("surface created")
         fractalBitmap = Bitmap.createBitmap(
             width, height,
             Bitmap.Config.ARGB_8888
@@ -108,7 +108,7 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        Log.d(LOG_KEY, "surface destroyed")
+        Timber.d("surface destroyed")
         bufferCanvas = null
         fractalBitmap = null
         //consider apply instead of commit
@@ -122,7 +122,7 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
 
     fun translate(xshift: Float, yshift: Float) {
         gestureRedraw(xshift, yshift, 1f)
-        Log.d(LOG_KEY, "Translate: $xshift horizontally, $yshift vertically")
+        Timber.d("Translate: $xshift horizontally, $yshift vertically")
     }
 
     fun startScale() {
@@ -131,18 +131,18 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
     }
 
     fun endGesture() {
-        Log.d(LOG_KEY, "Gesture ended, redrawing fractal")
+        Timber.d("Gesture ended, redrawing fractal")
         oldPosition = null
         invalidate()
     }
 
     fun scale(scale: Float) {
         gestureRedraw(0f, 0f, scale)
-        Log.d(LOG_KEY, "Scale: $scale")
+        Timber.d("Scale: $scale")
     }
 
     fun gestureRedraw(dx: Float, dy: Float, scale: Float) {
-        Log.d(LOG_KEY, "Redrawing gesture")
+        Timber.d("Redrawing gesture")
         var canvas: Canvas? = null
         try {
             synchronized(surfaceHolder!!) {
@@ -159,7 +159,7 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
     }
 
     fun tap(x: Float, y: Float) {
-        Log.d(LOG_KEY, "Single tap at point [$x, $y]")
+        Timber.d("Single tap at point [$x, $y]")
     }
 
     override fun saveBitmap() {
@@ -209,12 +209,12 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
         private var isMoveGesture = false
         private var isGesture = false
         fun update(evt: MotionEvent) {
-            Log.d(LOG_KEY, "Update on screen touch")
+            Timber.d("Update on screen touch")
             val x = evt.x
             val y = evt.y
             val action = evt.action and MotionEvent.ACTION_MASK
             if (action == MotionEvent.ACTION_DOWN) {
-                Log.d(LOG_KEY, "Touch down")
+                Timber.d("Touch down")
                 isGesture = false
             } else if ((action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_POINTER_UP)
                 && !isGesture
@@ -224,7 +224,7 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
                     tap(x, y)
                 }
             } else if (action == MotionEvent.ACTION_POINTER_DOWN) {
-                Log.d(LOG_KEY, "Second pointer landed, starting pinch gesture")
+                Timber.d("Second pointer landed, starting pinch gesture")
                 isGesture = true
                 isMoveGesture = false
                 startScale()
@@ -232,18 +232,18 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
                 if (!isGesture) {
                     isGesture = true
                     isMoveGesture = true
-                    Log.d(LOG_KEY, "Starting move gesture")
+                    Timber.d("Starting move gesture")
                     origin = PointF(x, y)
                     startTranslate()
                 } else if (isMoveGesture) {
-                    Log.d(LOG_KEY, "Continuing move gesture")
+                    Timber.d("Continuing move gesture")
                     if (origin == null) {
-                        Log.d(LOG_KEY, "Should not happen: move gesture already started and origin is null")
+                        Timber.d("Should not happen: move gesture already started and origin is null")
                     } else {
                         translate(x - origin!!.x, y - origin!!.y)
                     }
                 } else {
-                    Log.d(LOG_KEY, "Continuing pinch gesture")
+                    Timber.d("Continuing pinch gesture")
                     val n = evt.pointerCount
                     if (n < 2) return
                     val x2 = evt.getX(1)
@@ -257,7 +257,7 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
                     }
                 }
             } else if (action == MotionEvent.ACTION_UP) {
-                Log.d(LOG_KEY, "Everything up, resetting gestures")
+                Timber.d("Everything up, resetting gestures")
                 isGesture = false
                 distance = 0f
                 origin = null
@@ -270,9 +270,5 @@ class FractalCpuView : SurfaceView, SurfaceHolder.Callback, FractalViewWrapper {
             v.performClick()
             return true
         }
-    }
-
-    companion object {
-        private val LOG_KEY = FractalCpuView::class.java.name
     }
 }

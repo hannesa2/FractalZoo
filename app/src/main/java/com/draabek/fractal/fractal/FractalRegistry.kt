@@ -1,7 +1,6 @@
 package com.draabek.fractal.fractal
 
 import android.content.Context
-import android.util.Log
 import com.draabek.fractal.gl.GLSLFractal
 import com.draabek.fractal.palette.ColorPalette
 import com.draabek.fractal.util.SimpleTree
@@ -9,6 +8,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.reflect.TypeToken
+import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStream
@@ -60,9 +60,9 @@ class FractalRegistry private constructor() {
             }
             return fractal
         } catch (e: ClassNotFoundException) {
-            Log.w(LOG_KEY, "Cannot find fractal class $clazz")
+            Timber.w("Cannot find fractal class $clazz")
         } catch (e: IllegalAccessException) {
-            Log.w(LOG_KEY, "Cannot access fractal class $clazz")
+            Timber.w("Cannot access fractal class $clazz")
         } catch (e: InstantiationException) {
             throw RuntimeException(e)
         }
@@ -86,7 +86,7 @@ class FractalRegistry private constructor() {
             val vertexIS: InputStream = try {
                 ctx.assets.open(shaderPath + "_vertex.glsl")
             } catch (e: IOException) {
-                Log.d(LOG_KEY, "Using default vertex shader for $shaderPath")
+                Timber.d("Using default vertex shader for $shaderPath")
                 ctx.assets.open("shaders/default_vertex.glsl")
             }
             br = BufferedReader(InputStreamReader(vertexIS))
@@ -96,7 +96,7 @@ class FractalRegistry private constructor() {
             }
             arrayOf(vertexShader.toString(), fragmentShader.toString())
         } catch (e: IOException) {
-            Log.w(LOG_KEY, "IOException loading fractal shaders for$shaderPath")
+            Timber.w("IOException loading fractal shaders for$shaderPath")
             null
         }
     }
@@ -111,7 +111,7 @@ class FractalRegistry private constructor() {
             fractals[fractal.name] = fractal
             hierarchy.putPath(s, fractal.name)
         } else {
-            Log.e(LOG_KEY, String.format("Cannot load fractal %s", jsonObject["name"].asString))
+            Timber.e(String.format("Cannot load fractal %s", jsonObject["name"].asString))
         }
     }
 
@@ -131,7 +131,7 @@ class FractalRegistry private constructor() {
 		if (Utils.DEBUG) {
             throw new RuntimeException("Fractal not found in registry: " + name);
         } else {
-            Log.w(LOG_KEY, "Fractal not found in registry: " + name);
+            Timber.w("Fractal not found in registry: " + name);
             return get("Mandelbrot");
         }*/
         return fractals[name]
@@ -142,8 +142,6 @@ class FractalRegistry private constructor() {
     }
 
     companion object {
-        private val LOG_KEY = FractalRegistry::class.java.name
-
         @JvmStatic
         val instance = FractalRegistry()
     }

@@ -2,7 +2,7 @@ package com.draabek.fractal.gl
 
 import android.graphics.Bitmap
 import android.opengl.GLSurfaceView
-import android.util.Log
+import timber.log.Timber
 import java.nio.IntBuffer
 import javax.microedition.khronos.egl.*
 import javax.microedition.khronos.opengles.GL10
@@ -54,7 +54,7 @@ class PixelBuffer(private var mWidth: Int, private var mHeight: Int) {
 
         // Does this thread own the OpenGL context?
         if (Thread.currentThread().name != mThreadOwner) {
-            Log.e(TAG, "setRenderer: This thread does not own the OpenGL context.")
+            Timber.e("setRenderer: This thread does not own the OpenGL context.")
             return
         }
 
@@ -71,13 +71,13 @@ class PixelBuffer(private var mWidth: Int, private var mHeight: Int) {
         get() {
             // Do we have a renderer?
             if (mRenderer == null) {
-                Log.e(TAG, "getBitmap: Renderer was not set.")
+                Timber.e("getBitmap: Renderer was not set.")
                 return null
             }
 
             // Does this thread own the OpenGL context?
             if (Thread.currentThread().name != mThreadOwner) {
-                Log.e(TAG, "getBitmap: This thread does not own the OpenGL context.")
+                Timber.e("getBitmap: This thread does not own the OpenGL context.")
                 return null
             }
 
@@ -112,7 +112,7 @@ class PixelBuffer(private var mWidth: Int, private var mHeight: Int) {
     }
 
     private fun listConfig() {
-        Log.i(TAG, "Config List {")
+        Timber.i("Config List {")
         for (config in mEGLConfigs) {
 
             // Expand on this logic to dump other attributes        
@@ -122,12 +122,9 @@ class PixelBuffer(private var mWidth: Int, private var mHeight: Int) {
             val g: Int = getConfigAttrib(config, EGL10.EGL_GREEN_SIZE)
             val b: Int = getConfigAttrib(config, EGL10.EGL_BLUE_SIZE)
             val a: Int = getConfigAttrib(config, EGL10.EGL_ALPHA_SIZE)
-            Log.i(
-                TAG, "    <d,s,r,g,b,a> = <" + d + "," + s + "," +
-                        r + "," + g + "," + b + "," + a + ">"
-            )
+            Timber.i("<d,s,r,g,b,a> = <$d,$s,$r,$g,$b,$a>")
         }
-        Log.i(TAG, "}")
+        Timber.i("}")
     }
 
     private fun getConfigAttrib(config: EGLConfig?, attribute: Int): Int {
@@ -155,7 +152,6 @@ class PixelBuffer(private var mWidth: Int, private var mHeight: Int) {
     }
 
     companion object {
-        const val TAG = "PixelBuffer"
         const val LIST_CONFIGS = false
 
         //This constant appears as high as API 17

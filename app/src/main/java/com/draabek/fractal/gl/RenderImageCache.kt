@@ -2,7 +2,7 @@ package com.draabek.fractal.gl
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.util.Log
+import timber.log.Timber
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.FileOutputStream
@@ -24,7 +24,7 @@ class RenderImageCache internal constructor() {
             cacheFile = File.createTempFile(fractalName, "cache")
             if (cacheFile.exists()) {
                 if (!cacheFile.delete()) {
-                    Log.w(this.javaClass.name, String.format("Could not delete cache for %s", fractalName))
+                    Timber.w(String.format("Could not delete cache for %s", fractalName))
                 }
             }
             cacheFileNames[fractalName] = cacheFile.absolutePath
@@ -35,11 +35,7 @@ class RenderImageCache internal constructor() {
         try {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, FileOutputStream(cacheFile))
         } catch (e: FileNotFoundException) {
-            Log.e(
-                this.javaClass.name, String.format(
-                    "Could not save cache to %s: %s", cacheFile.absolutePath, "" + e
-                )
-            )
+            Timber.e(String.format("Could not save cache to %s: %s", cacheFile.absolutePath, "" + e))
         }
         cacheFileNames[fractalName] = cacheFile.absolutePath
     }
