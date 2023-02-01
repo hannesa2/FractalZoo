@@ -48,7 +48,7 @@ class FractalRegistry private constructor() {
                 if (loadedShaders == null) {
                     throw RuntimeException("No shaders loaded for $fractal")
                 }
-                fractal.shaders = loadedShaders
+                fractal.setShaders(loadedShaders)
             }
             if (settingsString != null) {
                 val retMap = Gson().fromJson<Map<String, Float>>(

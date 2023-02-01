@@ -73,7 +73,7 @@ public class RenderImageView extends androidx.appcompat.widget.AppCompatImageVie
                 requestRender();
             }
         });
-        renderImageCache = new RenderImageCache(Environment.getDataDirectory());
+        renderImageCache = new RenderImageCache();
     }
 
 
