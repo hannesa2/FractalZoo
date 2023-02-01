@@ -40,14 +40,14 @@ class MainActivity : AppCompatActivity() {
     @Throws(IOException::class)
     fun readFractalMetadata(): Array<String?> {
         val fractals = assets.list("fractals")
-        val fractalStrings = arrayOfNulls<String>(fractals!!.size)
+        val fractalList = arrayOfNulls<String>(fractals!!.size)
         for (i in fractals.indices) {
             val fractal = fractals[i]
-            val `is` = assets.open("fractals/$fractal")
-            val json = readFully(`is`)
-            fractalStrings[i] = json
+            val inputStream = assets.open("fractals/$fractal")
+            val json = readFully(inputStream)
+            fractalList[i] = json
         }
-        return fractalStrings
+        return fractalList
     }
 
     /**
@@ -158,12 +158,12 @@ class MainActivity : AppCompatActivity() {
         currentView!!.clear()
         currentView!!.setRenderListener(object : RenderListener {
             override fun onRenderRequested() {
-                Timber.i(String.format("Rendering requested on %s", instance.current!!.name))
+                Timber.i("Rendering requested on <${instance.current!!.name}>")
                 progressBar!!.post { progressBar!!.visibility = View.VISIBLE }
             }
 
             override fun onRenderComplete(millis: Long) {
-                Timber.i(String.format("Rendering complete in %d ms", millis))
+                Timber.i("Rendering complete in $millis ms on <${instance.current!!.name}>")
                 progressBar!!.post { if (!currentView!!.isRendering) progressBar!!.visibility = View.GONE }
             }
         })

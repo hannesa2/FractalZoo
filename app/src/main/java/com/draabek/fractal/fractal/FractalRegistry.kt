@@ -46,7 +46,7 @@ class FractalRegistry private constructor() {
                 if (loadedShaders == null) {
                     throw RuntimeException("No shaders loaded for $fractal")
                 }
-                fractal.setShaders(loadedShaders)
+                fractal.shaders = loadedShaders
             }
             if (settingsString != null) {
                 val retMap = Gson().fromJson<Map<String, Float>>(
@@ -71,13 +71,10 @@ class FractalRegistry private constructor() {
 
     private fun loadShaders(ctx: Context, shaderPathX: String?): Array<String>? {
         var shaderPath = shaderPathX ?: return null
-        if (!shaderPath.contains("/")) shaderPath = "shaders/$shaderPath"
+        if (!shaderPath.contains("/"))
+            shaderPath = "shaders/$shaderPath"
         return try {
-            var br = BufferedReader(
-                InputStreamReader(
-                    ctx.assets.open(shaderPath + "_fragment.glsl")
-                )
-            )
+            var br = BufferedReader(InputStreamReader(ctx.assets.open(shaderPath + "_fragment.glsl")))
             val fragmentShader = StringBuilder()
             var line: String?
             while (br.readLine().also { line = it } != null) {
@@ -86,7 +83,7 @@ class FractalRegistry private constructor() {
             val vertexIS: InputStream = try {
                 ctx.assets.open(shaderPath + "_vertex.glsl")
             } catch (e: IOException) {
-                Timber.d("Using default vertex shader for $shaderPath")
+                Timber.w("Using default vertex shader for $shaderPath")
                 ctx.assets.open("shaders/default_vertex.glsl")
             }
             br = BufferedReader(InputStreamReader(vertexIS))
@@ -126,14 +123,6 @@ class FractalRegistry private constructor() {
     }
 
     operator fun get(name: String): Fractal? {
-        /*Fractal f = fractals.get(name);
-		if (f != null) return f;
-		if (Utils.DEBUG) {
-            throw new RuntimeException("Fractal not found in registry: " + name);
-        } else {
-            Timber.w("Fractal not found in registry: " + name);
-            return get("Mandelbrot");
-        }*/
         return fractals[name]
     }
 
@@ -142,7 +131,6 @@ class FractalRegistry private constructor() {
     }
 
     companion object {
-        @JvmStatic
         val instance = FractalRegistry()
     }
 }

@@ -9,11 +9,8 @@ class GLSLFractal : Fractal() {
      * directly on the graphics card
      */
     var shaders: Array<String>? = null
-        private set
+
     override val viewWrapper: Class<out FractalViewWrapper>
         get() = RenderImageView::class.java
 
-    fun setShaders(shaders: Array<String>) {
-        this.shaders = shaders
-    }
 }
