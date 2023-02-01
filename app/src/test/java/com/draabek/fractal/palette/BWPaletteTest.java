@@ -1,8 +1,8 @@
 package com.draabek.fractal.palette;
 
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
+
+import org.junit.Test;
 
 /**
  * Created by Vojta on 28.01.2017.

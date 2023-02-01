@@ -1,13 +1,15 @@
 
 buildscript {
+    ext {
+        kotlin_version = '1.8.0'
+    }
     repositories {
-        jcenter()
+        mavenCentral()
         google()
     }
     dependencies {
-        //noinspection GradleDependency
-        classpath 'com.android.tools.build:gradle:3.3.0-rc03'
-        //classpath 'com.dicedmelon.gradle:jacoco-android:0.1.1'
+        classpath 'com.android.tools.build:gradle:7.4.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
 
@@ -17,11 +19,9 @@ plugins {
 
 allprojects {
     repositories {
-        jcenter()
-        maven {
-            url 'https://maven.google.com'
-        }
+        mavenCentral()
         google()
+        maven { url 'https://jitpack.io' }
     }
 }
 

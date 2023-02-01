@@ -1,3 +1,7 @@
+project (FractalZoo
+#        VERSION 1.0.0 TODO this causes an error "VERSION not allowed unless CMP0048 is set to NEW"
+        DESCRIPTION "Fractal zoo")
+
 # Sets the minimum version of CMake required to build your native library.
 # This ensures that a certain set of CMake features is available to
 # your build.

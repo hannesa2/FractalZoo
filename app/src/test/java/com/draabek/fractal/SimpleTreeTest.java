@@ -3,7 +3,6 @@ package com.draabek.fractal;
 import com.draabek.fractal.util.SimpleTree;
 
 import org.junit.Assert;
-
 import org.junit.Test;
 
 import java.util.ArrayDeque;
@@ -62,24 +61,25 @@ public class SimpleTreeTest {
                 .children.get(1)
                 .children.get(0)
                 .children.get(0)
-                .data);    }
+                .data);
+    }
 
     @Test
     public void putPathDeque() {
         SimpleTree<Integer> simpleTree = new SimpleTree<>(0);
-        Deque<Integer> path = new ArrayDeque<>(Arrays.asList(2,1,0));
+        Deque<Integer> path = new ArrayDeque<>(Arrays.asList(2, 1, 0));
         simpleTree.putPath(path, 10);
         path.clear();
-        path.addAll(Arrays.asList(3,1,0));
+        path.addAll(Arrays.asList(3, 1, 0));
         simpleTree.putPath(path, 20);
         Assert.assertEquals(1, simpleTree.children.size());
         Assert.assertEquals(2, simpleTree.children.get(0).children.size());
-        Assert.assertEquals(10, (int)simpleTree
+        Assert.assertEquals(10, (int) simpleTree
                 .children.get(0)
                 .children.get(0)
                 .children.get(0)
                 .data);
-        Assert.assertEquals(20, (int)simpleTree
+        Assert.assertEquals(20, (int) simpleTree
                 .children.get(0)
                 .children.get(1)
                 .children.get(0)

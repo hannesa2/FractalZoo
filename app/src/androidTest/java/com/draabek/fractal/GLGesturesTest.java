@@ -1,12 +1,40 @@
 package com.draabek.fractal;
 
 
+import static androidx.test.espresso.Espresso.onData;
+import static androidx.test.espresso.Espresso.onView;
+import static androidx.test.espresso.action.ViewActions.click;
+import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
+import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.Matchers.anything;
+import static org.hamcrest.Matchers.is;
+
 import android.Manifest;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
+
+import androidx.test.espresso.DataInteraction;
+import androidx.test.espresso.NoMatchingViewException;
+import androidx.test.espresso.ViewAction;
+import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.action.GeneralLocation;
+import androidx.test.espresso.action.GeneralSwipeAction;
+import androidx.test.espresso.action.Press;
+import androidx.test.espresso.action.Swipe;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.filters.LargeTest;
+import androidx.test.rule.ActivityTestRule;
+import androidx.test.rule.GrantPermissionRule;
 
 import com.draabek.fractal.activity.MainActivity;
 import com.draabek.fractal.fractal.FractalRegistry;
@@ -24,33 +52,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 
-import androidx.test.espresso.DataInteraction;
-import androidx.test.espresso.NoMatchingViewException;
-import androidx.test.espresso.ViewAction;
-import androidx.test.espresso.ViewInteraction;
-import androidx.test.espresso.action.GeneralLocation;
-import androidx.test.espresso.action.GeneralSwipeAction;
-import androidx.test.espresso.action.Press;
-import androidx.test.espresso.action.Swipe;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.filters.LargeTest;
-import androidx.test.rule.ActivityTestRule;
-import androidx.test.rule.GrantPermissionRule;
-
-import static androidx.test.espresso.Espresso.onData;
-import static androidx.test.espresso.Espresso.onView;
-import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.assertion.ViewAssertions.matches;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
-import static androidx.test.espresso.matcher.ViewMatchers.withContentDescription;
-import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.Matchers.anything;
-import static org.hamcrest.Matchers.is;
 //FIXME
 @Ignore
 @LargeTest
@@ -64,14 +65,14 @@ public class GLGesturesTest {
     public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
 
     private void waitForRender() {
-        for (int timeout = 0; timeout < 10;timeout++) {
+        for (int timeout = 0; timeout < 10; timeout++) {
             try {
                 onView(allOf(withId(R.id.indeterminateBar),
                         withContentDescription("Progress Bar"))).check(matches(isDisplayed()));
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Timber.e(e);
                 }
             } catch (NoMatchingViewException e) {
                 return;
@@ -79,7 +80,7 @@ public class GLGesturesTest {
         }
         throw new RuntimeException("Timeout");
     }
-    
+
     @Test
     public void gLGesturesTest() throws IOException {
         ViewInteraction actionMenuItemView = onView(
@@ -132,7 +133,7 @@ public class GLGesturesTest {
 //        TODO Increase precision to be actually relevant
 //        This just asserts that Original difference is bigger than current difference
         double diff2 = cumulativeDifference(buffer1, buffer3);
-       // Assert.assertEquals(0, diff2, diff);
+        // Assert.assertEquals(0, diff2, diff);
     }
 
 
@@ -156,7 +157,7 @@ public class GLGesturesTest {
                                                 0)),
                                 1),
                         isDisplayed()));
-        String savedFile = (File.createTempFile("Mandelbrot-test-",".jpg").getAbsolutePath());
+        String savedFile = (File.createTempFile("Mandelbrot-test-", ".jpg").getAbsolutePath());
         appCompatEditText.perform(replaceText(savedFile),
                 closeSoftKeyboard());
 
@@ -189,7 +190,7 @@ public class GLGesturesTest {
 
     private double cumulativeDifference(int[] buffer1, int[] buffer2) {
         double cumdiff = 0;
-        for (int i = 1;i < buffer1.length;i++) {
+        for (int i = 1; i < buffer1.length; i++) {
             cumdiff += Math.abs((double) (buffer1[i] & 0xFF) / 255 - (double) (buffer1[i] & 0xFF) / 255);
             cumdiff += Math.abs((double) ((buffer1[i] & 0xFF00) >> 8) / 255 - (double) ((buffer2[i] & 0xFF00) >> 8) / 255);
             cumdiff += Math.abs((double) ((buffer1[i] & 0xFF0000) >> 16) / 255 - (double) ((buffer2[i] & 0xFF0000) >> 16) / 255);
